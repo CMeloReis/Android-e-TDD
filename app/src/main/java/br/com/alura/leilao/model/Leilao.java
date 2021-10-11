@@ -2,6 +2,7 @@ package br.com.alura.leilao.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //REPRESENTA CADA ITEM DO RECYCLEVIEW
@@ -19,6 +20,8 @@ public class Leilao implements Serializable {
     }
 
     public void propoe (Lance lance) {
+        lances.add(lance);
+        Collections.sort(lances);
         double valorLance = lance.getValor();
         calculaMaiorLance(valorLance);
         calculaMenorLance(valorLance);
@@ -49,4 +52,11 @@ public class Leilao implements Serializable {
         return descricao;
     }
 
+    public List<Lance> tresMaioresLances() {
+        int quantidadeMaximaLances = lances.size();
+        if (quantidadeMaximaLances > 3) {
+            quantidadeMaximaLances = 3;
+        }
+        return lances.subList(0, quantidadeMaximaLances);
+    }
 }
