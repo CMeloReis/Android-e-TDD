@@ -2,11 +2,11 @@ package br.com.alura.leilao.model;
 
 import static org.junit.Assert.*;
 
-
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
+
+import br.com.alura.leilao.builder.LeilaoBuilder;
 
 public class LeilaoTest {
     public static final double DELTA = 0.0001;
@@ -26,7 +26,7 @@ public class LeilaoTest {
         assertEquals("Console", descricaoDevolvida);
     }
 
-    //NOMEANDO TESTES
+    //NOMEANDO TESTES APOS TESTE
     //[nome do metodo][Estado de teste][Resultado esperado] -> uma das formas
     //[getMaiorlance][QuandoRecebeApenasUmLance][DevolveMaiorLance]
     //[deve][Resultado esperado][Estado de teste] -> outra forma
@@ -53,16 +53,16 @@ public class LeilaoTest {
 
         assertEquals(200.0, maiorLanceDevolvido, DELTA);
     }
-
-    @Test
-    public void deve_DevolverMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente () {
-        CONSOLE.propoe(new Lance(LUFFY, 10000.0));
-        CONSOLE.propoe(new Lance(NAMI, 6000.0));
-
-        double maiorLanceDevolvido = CONSOLE.getMaiorLance();
-
-        assertEquals(10000.0, maiorLanceDevolvido, DELTA);
-    }
+// TESTE DESNECESSARIO APOS NOVA IMPLEMENTACAO DO METODO PROPOE NA CLASSE LEILAO
+//    @Test
+//    public void deve_DevolverMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente () {
+//        CONSOLE.propoe(new Lance(LUFFY, 10000.0));
+//        CONSOLE.propoe(new Lance(NAMI, 6000.0));
+//
+//        double maiorLanceDevolvido = CONSOLE.getMaiorLance();
+//
+//        assertEquals(10000.0, maiorLanceDevolvido, DELTA);
+//    }
 
     @Test
     public void deve_DevolverMenorLance_QuandoRecebeApenasUmLance() {
@@ -82,16 +82,17 @@ public class LeilaoTest {
 
         assertEquals(100.0, menorLanceDevolvido, DELTA);
     }
-
-    @Test
-    public void deve_DevolverMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente () {
-        CONSOLE.propoe(new Lance(LUFFY, 10000.0));
-        CONSOLE.propoe(new Lance(NAMI, 6000.0));
-
-        double menorLanceDevolvido = CONSOLE.getMenorLance();
-
-        assertEquals(6000.0, menorLanceDevolvido, DELTA);
-    }
+//TESTE NAO MAIS NECESSARIO APOS TESTE naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance
+//NOVA REGRA DE NEGOCIO NAO ESPERA MAIS ESSE TIPO DE ACAO (LANCES EM ORDEM DESCRESCENTE)
+//    @Test
+//    public void deve_DevolverMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente () {
+//        CONSOLE.propoe(new Lance(LUFFY, 10000.0));
+//        CONSOLE.propoe(new Lance(NAMI, 6000.0));
+//
+//        double menorLanceDevolvido = CONSOLE.getMenorLance();
+//
+//        assertEquals(6000.0, menorLanceDevolvido, DELTA);
+//    }
 
     @Test
     public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances() {
@@ -174,7 +175,63 @@ public class LeilaoTest {
                 tresMaioresLancesDevolvidosParaCincoLances.get(1).getValor(), DELTA);
         assertEquals(400.0,
                 tresMaioresLancesDevolvidosParaCincoLances.get(2).getValor(), DELTA);
+    }
 
+    @Test
+    public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoTiverLances(){
+       double maiorLanceDevolvido = CONSOLE.getMaiorLance();
+
+       assertEquals(0.0, maiorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMenorLance_QuandoNaoTiverLances(){
+        double menorLanceDevolvido = CONSOLE.getMenorLance();
+
+        assertEquals(0.0, menorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
+        CONSOLE.propoe(new Lance(LUFFY, 500.0));
+        CONSOLE.propoe(new Lance(NAMI, 400.0));
+
+        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
+
+        assertEquals(1, quantidadeLancesDevolvida);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
+        CONSOLE.propoe(new Lance(NAMI, 500.0));
+        CONSOLE.propoe(new Lance(NAMI, 600.0));
+
+        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
+
+        assertEquals(1, quantidadeLancesDevolvida);
+        assertEquals(500.0, CONSOLE.tresMaioresLances().get(0).getValor(), DELTA);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
+        final Leilao console = new LeilaoBuilder("Console")
+                .lance(NAMI, 100.0)
+                .lance(LUFFY, 200.0)
+                .lance(NAMI, 300.0)
+                .lance(LUFFY, 400.0)
+                .lance(NAMI, 500.0)
+                .lance(LUFFY, 600.0)
+                .lance(NAMI, 700.0)
+                .lance(LUFFY, 800.0)
+                .lance(NAMI, 900.0)
+                .lance(LUFFY, 1000.0)
+                .lance(NAMI, 1100.0)
+                .lance(LUFFY, 1200.0)
+                .build();
+
+        int quantidadeLancesDevolvida = console.quantidadeLances();
+
+        assertEquals(10, quantidadeLancesDevolvida);
     }
 
 }

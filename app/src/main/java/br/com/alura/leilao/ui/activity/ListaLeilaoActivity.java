@@ -38,16 +38,17 @@ public class ListaLeilaoActivity extends AppCompatActivity {
 
     private List<Leilao> leiloesDeExemplo() {
         Leilao console = new Leilao("Console");
-        console.propoe(new Lance(new Usuario("Luffy"), 400.0));
         console.propoe(new Lance(new Usuario("Nami"), 100.0));
+        console.propoe(new Lance(new Usuario("Luffy"), 400.0));
+
 
         Leilao computador = new Leilao("Computador");
         computador.propoe(new Lance(new Usuario("Nami"), 1000.0));
 
         Leilao carro = new Leilao("Carro");
         carro.propoe(new Lance(new Usuario("Usopp"), 10000.0));
-        carro.propoe(new Lance(new Usuario("Sanji"), 8000.0));
-        carro.propoe(new Lance(new Usuario("Luffy"), 20000.0));
+        carro.propoe(new Lance(new Usuario("Sanji"), 12000.0));
+        carro.propoe(new Lance(new Usuario("Luffy"), 17000.0));
 
 
         return new ArrayList<>(Arrays.asList(

@@ -30,4 +30,9 @@ public class Lance implements Serializable, Comparable {
         }
         return 0;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+
+    }
 }
