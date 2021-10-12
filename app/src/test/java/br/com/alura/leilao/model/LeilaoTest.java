@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import br.com.alura.leilao.builder.LeilaoBuilder;
-
 public class LeilaoTest {
     public static final double DELTA = 0.0001;
     private final Leilao CONSOLE = new Leilao("Console");
@@ -194,44 +192,46 @@ public class LeilaoTest {
     @Test
     public void naoDeve_AdicionarLance_QuandoForMenorQueMaiorLance() {
         CONSOLE.propoe(new Lance(LUFFY, 500.0));
-        CONSOLE.propoe(new Lance(NAMI, 400.0));
+        try {
+            CONSOLE.propoe(new Lance(NAMI, 400.0));
+            fail("Era esperada uma RunTimeException");//avisa que caso nao lance excecao, ira falhar
+        } catch (RuntimeException exception) {
+            assertEquals("Lance foi menor que maior lance", exception.getMessage());
+        }
 
-        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
-
-        assertEquals(1, quantidadeLancesDevolvida);
+//        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances(); NAO MAIS NECESSARIO, LIDANDO COM EXCECOES
+//        assertEquals(1, quantidadeLancesDevolvida);
     }
 
     @Test
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
         CONSOLE.propoe(new Lance(NAMI, 500.0));
-        CONSOLE.propoe(new Lance(NAMI, 600.0));
-
-        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
-
-        assertEquals(1, quantidadeLancesDevolvida);
-        assertEquals(500.0, CONSOLE.tresMaioresLances().get(0).getValor(), DELTA);
+        try {
+            CONSOLE.propoe(new Lance(NAMI, 600.0));
+            fail("Era esperada uma RunTimeException");
+        } catch (RuntimeException exception) {
+           assertEquals("Mesmo usuario do ultimo lance", exception.getMessage());//validar a mensagem a partir da exception capturada
+        }
     }
 
     @Test
-    public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
-        final Leilao console = new LeilaoBuilder("Console")
-                .lance(NAMI, 100.0)
-                .lance(LUFFY, 200.0)
-                .lance(NAMI, 300.0)
-                .lance(LUFFY, 400.0)
-                .lance(NAMI, 500.0)
-                .lance(LUFFY, 600.0)
-                .lance(NAMI, 700.0)
-                .lance(LUFFY, 800.0)
-                .lance(NAMI, 900.0)
-                .lance(LUFFY, 1000.0)
-                .lance(NAMI, 1100.0)
-                .lance(LUFFY, 1200.0)
-                .build();
+    public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances(){
+        CONSOLE.propoe(new Lance(NAMI,  100.0));
+        CONSOLE.propoe(new Lance(LUFFY,  200.0));
+        CONSOLE.propoe(new Lance(NAMI,  300.0));
+        CONSOLE.propoe(new Lance(LUFFY,  400.0));
+        CONSOLE.propoe(new Lance(NAMI,  500.0));
+        CONSOLE.propoe(new Lance(LUFFY,  600.0));
+        CONSOLE.propoe(new Lance(NAMI,  700.0));
+        CONSOLE.propoe(new Lance(LUFFY,  800.0));
+        CONSOLE.propoe(new Lance(NAMI,  900.0));
+        CONSOLE.propoe(new Lance(LUFFY,  1000.0));
 
-        int quantidadeLancesDevolvida = console.quantidadeLances();
-
-        assertEquals(10, quantidadeLancesDevolvida);
+        try {
+            CONSOLE.propoe(new Lance(NAMI,  1100.0));
+        }catch (RuntimeException exception) {
+            assertEquals("Usuario ja ofertou cinco lances", exception.getMessage());
+        }
     }
 
 }
