@@ -7,4 +7,4 @@ Android parte 2: Boas práticas e novos cenários de testes.
 
 Projeto base disponibilizado pela plataforma Alura
 
-EM ANDAMENTO
+
